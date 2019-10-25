@@ -174,3 +174,4 @@ fabric.properties
 # mypy
 .mypy_cache/
 *.jpg
+*.png

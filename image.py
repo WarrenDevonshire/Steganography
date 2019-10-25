@@ -4,7 +4,7 @@
 from PIL import Image
 from functools import partial
 
-IMAGE_FILE = "canyon.jpg"  # Enter the name of your image here.
+IMAGE_FILE = "resources/canyon.jpg"  # Enter the name of your image here.
 
 im = Image.open(IMAGE_FILE)
 print(im.format, im.size, im.mode)
