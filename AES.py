@@ -8,7 +8,7 @@ import binascii
 backend = default_backend()  # Provides primitives for operating the ciphers
 key_size = 128  # AES can operate with different key sizes. We use 128 bit = 16 bytes
 block_size = 128  # AES block size is 128
-key = os.urandom(key_size / 8)  # Create a random key. NOTE: os.urandom uses analog sources to generate random bits
+key = os.urandom(key_size // 8)  # Create a random key. NOTE: os.urandom uses analog sources to generate random bits
 initializationvec = os.urandom(16)  # Used for CBC cipher mode
 
 cipher = Cipher(algorithms.AES(key), modes.ECB(), backend=backend)
@@ -16,11 +16,11 @@ cipher = Cipher(algorithms.AES(key), modes.ECB(), backend=backend)
 
 
 encryptor = cipher.encryptor()
-plaintext = chr(0) * 16
+plaintext = (chr(0) * 16).encode()
 ciphertext = encryptor.update(plaintext)
 decryptor = cipher.decryptor()
 decryptedtext = decryptor.update(ciphertext)
-print decryptedtext == plaintext
+decryptedtext == plaintext
 print(binascii.hexlify(plaintext), binascii.hexlify(ciphertext))
 
 
@@ -29,7 +29,7 @@ def AES(key, plaintext):  # AES encryption algorithm
     block_size = 128
     if len(plaintext * 8) % block_size != 0:
         print(len(plaintext))
-        print "Plain text must be a multiple of %s" % (block_size)
+        print ("Plain text must be a multiple of %s" % (block_size))
         return
     encryptor = cipher.encryptor()
     ciphertext = encryptor.update(plaintext)
@@ -46,16 +46,16 @@ def AES(key, plaintext):  # AES encryption algorithm
     return (pt_padded, ct_padded)
 
 
-(p1, c1) = AES(key, (chr(0)) * 16)  # Plaintext is 16 bytes, all 0
+(p1, c1) = AES(key, ((chr(0)) * 16).encode())  # Plaintext is 16 bytes, all 0
 
-print "Plaintext bits: " + p1
-print "Ciphertext bits: " + c1
+print ("Plaintext bits: " + p1)
+print ("Ciphertext bits: " + c1)
 
 print;
 print;
 
-(p2, c2) = AES(key, (chr(0)) * 15 + chr(1))  # Plaintext is 16 bytes, 15 all 0, 16th byte value is 1
-print "Plaintext bits: " + p2
-print "Ciphertext bits: " + c2
+(p2, c2) = AES(key, ((chr(0)) * 15 + chr(1)).encode())  # Plaintext is 16 bytes, 15 all 0, 16th byte value is 1
+print ("Plaintext bits: " + p2)
+print ("Ciphertext bits: " + c2)
 
 print("Difference: %d positions out of %d" % (len([i for i in range(len(c1)) if c1[i] != c2[i]]), len(c1)))
