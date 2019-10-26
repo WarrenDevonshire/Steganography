@@ -20,7 +20,7 @@ plaintext = chr(0) * 16
 ciphertext = encryptor.update(plaintext)
 decryptor = cipher.decryptor()
 decryptedtext = decryptor.update(ciphertext)
-decryptedtext == plaintext
+print decryptedtext == plaintext
 print(binascii.hexlify(plaintext), binascii.hexlify(ciphertext))
 
 
