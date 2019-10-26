@@ -16,8 +16,8 @@ kdf = PBKDF2HMAC(
     iterations=100000,
     backend=backend
 )
-key = kdf.derive(passCode)
-print binascii.hexlify(key)
+key = kdf.derive(passCode.encode())
+print(binascii.hexlify(key))
 
 # verify
 
@@ -28,4 +28,4 @@ kdf = PBKDF2HMAC(
     iterations=100000,
     backend=backend
 )
-kdf.verify(passCode, key)  # will throw if key doesn't match
+kdf.verify(passCode.encode(), key)  # will throw if key doesn't match
