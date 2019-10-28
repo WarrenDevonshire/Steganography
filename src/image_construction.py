@@ -1,8 +1,8 @@
 from PIL import Image
 import numpy as np
 
-CARRY_IMAGE_FILE = "Images/canyon.png"
-MESG_IMAGE_FILE = "Images/hello.png"
+CARRY_IMAGE_FILE = "../Images/canyon.png"
+MESG_IMAGE_FILE = "../Images/hello.png"
 
 def to_array(img):
     image = Image.open(img)
