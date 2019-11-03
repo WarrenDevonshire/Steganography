@@ -51,7 +51,7 @@ def mergeImages(carryImage_path, mesgImage_path):
     
     # Create a new image that will be outputted
     new_image = Image.new(carry_image.mode, carry_image.size)
-    new_image_arr = construct.to_array(carry_image)
+    new_image_arr = construct.to_array(new_image)
     
     carry_arr = construct.to_array(carry_image)
     mesg_arr = construct.to_array(message_image)
@@ -63,7 +63,7 @@ def mergeImages(carryImage_path, mesgImage_path):
         rgb2 = integer_to_binary((0))
 
         # Check if the pixel count is valid for the second image
-        if i < len(mesg_arr):
+        if i < len(mesg_arr[0]):
             rgb2 = integer_to_binary(mesg_arr[0][i])
 
         # Merge the two pixels and convert it to a integer tuple
