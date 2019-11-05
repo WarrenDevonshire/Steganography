@@ -69,11 +69,16 @@ def random_retrieve(carry_image, seed):
         random_index = seq[i]
         header.append(c_arr[random_index])
     header_bits = []
+    byte_str = ''
     for byte in header:
+        bit = byte % 2
+        byte_str += '{0:01b}'.format(bit & 1)
         header_bits.append(byte % 2)
     print(header)
-    print(header_bits)
-    # print(binascii.hexlify(b"\x89\x50\x4e\x47\x0d\x0a\x1a\x0a"))
+    print(byte_str, len(byte_str))
+    h = int(byte_str, 2).to_bytes(length=8, byteorder='big', signed=False)
+    print(binascii.hexlify(h))
+    print(binascii.hexlify(b"\x89\x50\x4e\x47\x0d\x0a\x1a\x0a"))
 
 
 image = random_merge(CARRY_IMAGE_PATH, SECRET_IMAGE_PATH, 0)
