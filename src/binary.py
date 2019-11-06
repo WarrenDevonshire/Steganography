@@ -6,6 +6,7 @@ from PIL import Image
 
 CARRY_IMAGE_PATH = "../Images/hello.png"
 SECRET_IMAGE_PATH = "../Images/basi0g01.png"
+PNG_HEADER_SIG = binascii.hexlify(b"\x89\x50\x4e\x47\x0d\x0a\x1a\x0a")
 
 
 def set_bit(byte, index, bit):
@@ -36,25 +37,28 @@ def random_merge(path_to_carry, path_to_secret, seed):
         s_bin = s_file.read()
 
     c_upper_bound = len(c_arr)
-    bits_in_s = len(s_bin) * 8
+    s_file_size = len(s_bin)
+    bits_in_s = s_file_size * 8  # number of bits in s_bin
     # print(bits_in_s, c_upper_bound, c_shape)
-    assert (bits_in_s < c_upper_bound)  # number of bits in s must be less than bytes in c
+    assert (bits_in_s + 32 < c_upper_bound)  # number of bits in s must be less than bytes in c + 32 for size info
 
-    seq = get_random_sequence(0, c_upper_bound, seed)
-    counter = 0
-    temp = []
-    for i in range(0, 100):
-        temp.append(c_arr[seq[i]])
-    print(temp)
+    seq = get_random_sequence(0, c_upper_bound, seed) # return a shuffled array of indexes for c_arr
+    counter = 0  # used for index of sequence.
+    # store secret_file_size in carry image.
+    s_file_size_bytes = s_file_size.to_bytes(length=4, byteorder='big', signed=False)
+    for byte in s_file_size_bytes:
+        byte_str = '{0:08b}'.format(byte)
+        for bit in byte_str:
+            c_arr[seq[counter]] = set_bit(c_arr[seq[counter]], 0, bit)
+            counter = counter + 1
+
+    # store secret_file in carry image.
     for byte in s_bin:
         byte_str = '{0:08b}'.format(byte)
         for bit in byte_str:
             c_arr[seq[counter]] = set_bit(c_arr[seq[counter]], 0, bit)
             counter = counter + 1
-    temp = []
-    for i in range(0, 100):
-        temp.append(c_arr[seq[i]])
-    print(temp)
+
     c_arr = c_arr.reshape(c_shape)
     c_image = Image.fromarray(c_arr, c_image.mode)
     return c_image
@@ -64,21 +68,23 @@ def random_retrieve(carry_image, seed):
     c_arr = np.array(carry_image).ravel()
     c_upper_bound = len(c_arr)
     seq = get_random_sequence(0, c_upper_bound, seed)
-    header = []
-    for i in range(0, 64):
+
+    file = []
+
+    for i in range(0, 64+32):
         random_index = seq[i]
-        header.append(c_arr[random_index])
-    header_bits = []
-    byte_str = ''
-    for byte in header:
+        file.append(c_arr[random_index])
+
+    header_bit_str = ''
+    for byte in file:
         bit = byte % 2
-        byte_str += '{0:01b}'.format(bit & 1)
-        header_bits.append(byte % 2)
-    print(header)
-    print(byte_str, len(byte_str))
-    h = int(byte_str, 2).to_bytes(length=8, byteorder='big', signed=False)
-    print(binascii.hexlify(h))
-    print(binascii.hexlify(b"\x89\x50\x4e\x47\x0d\x0a\x1a\x0a"))
+        header_bit_str += '{0:01b}'.format(bit & 1)
+
+    h = int(header_bit_str[:32], 2)  # .to_bytes(length=4, byteorder='big', signed=False)
+    print("Secret file is", h, "bytes long")  # print the length of file in bytes
+    h = int(header_bit_str[32:], 2).to_bytes(length=8, byteorder='big', signed=False)
+    print("PNG Header Sig: ", binascii.hexlify(h))  # print the png header signature
+    print("PNG Header Sig matches:", binascii.hexlify(h) == PNG_HEADER_SIG)
 
 
 image = random_merge(CARRY_IMAGE_PATH, SECRET_IMAGE_PATH, 0)
