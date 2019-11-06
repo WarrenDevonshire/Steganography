@@ -1,4 +1,5 @@
 import binascii
+from io import BytesIO
 
 import numpy as np
 from numpy import random
@@ -69,23 +70,33 @@ def random_retrieve(carry_image, seed):
     c_upper_bound = len(c_arr)
     seq = get_random_sequence(0, c_upper_bound, seed)
 
-    file = []
+    c_file = []
 
     for i in range(0, 64+32):
         random_index = seq[i]
-        file.append(c_arr[random_index])
+        c_file.append(c_arr[random_index])
 
-    header_bit_str = ''
-    for byte in file:
+    c_bit_str = ''
+    for byte in c_file:
         bit = byte % 2
-        header_bit_str += '{0:01b}'.format(bit & 1)
+        c_bit_str += '{0:01b}'.format(bit & 1)
 
-    h = int(header_bit_str[:32], 2)  # .to_bytes(length=4, byteorder='big', signed=False)
-    print("Secret file is", h, "bytes long")  # print the length of file in bytes
-    h = int(header_bit_str[32:], 2).to_bytes(length=8, byteorder='big', signed=False)
+    s_file_size = int(c_bit_str[:32], 2)  # .to_bytes(length=4, byteorder='big', signed=False)
+    assert(s_file_size * 8 < c_upper_bound)  # check that number of bits in s_file is less than bytes in c_arr
+    print("Secret file is", s_file_size, "bytes long")  # print the length of file in bytes
+    h = int(c_bit_str[32:], 2).to_bytes(length=8, byteorder='big', signed=False)
+    assert(binascii.hexlify(h) == PNG_HEADER_SIG)
     print("PNG Header Sig: ", binascii.hexlify(h))  # print the png header signature
-    print("PNG Header Sig matches:", binascii.hexlify(h) == PNG_HEADER_SIG)
+
+    for i in range(64+32, s_file_size * 8):
+        random_index = seq[i]
+        bit = c_arr[random_index] % 2
+        c_bit_str += '{0:01b}'.format(bit & 1)
+    s_file = int(c_bit_str[32:], 2).to_bytes(length=s_file_size-4, byteorder='big', signed=False)
+    print(s_file)
+
+    return Image.open(BytesIO(s_file))
 
 
 image = random_merge(CARRY_IMAGE_PATH, SECRET_IMAGE_PATH, 0)
-random_retrieve(image, 0)
+random_retrieve(image, 0).show()
