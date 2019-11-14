@@ -15,7 +15,7 @@ def random_merge(path_to_carry, path_to_secret, seed):
         c_shape = c_arr.shape
         c_arr = c_arr.ravel()
         s_bin = s_file.read()
-
+    seed = seed % (2 ** 32 - 1)  # np only takes ints within this range.
     c_upper_bound = len(c_arr)
     s_file_size = len(s_bin)
     bits_in_s = s_file_size * 8  # number of bits in s_bin
@@ -45,6 +45,7 @@ def random_merge(path_to_carry, path_to_secret, seed):
 
 
 def random_retrieve(carry_image, seed):
+    seed = seed % (2 ** 32 - 1)  # np only takes ints within this range.
     c_arr = np.array(carry_image).ravel()
     c_upper_bound = len(c_arr)
     seq = get_random_sequence(0, c_upper_bound, seed)

@@ -11,9 +11,6 @@ class TestBinStrategy(unittest.TestCase):
     def test_strategy(self):
         with Image.open(SECRET_IMAGE_PATH) as s_image:
             seed = get_seed(pass_code="hello hello hello", salt=bytes(4))
-            print(seed)
-            seed = seed % (2**32 - 1)
-            print(seed)
             image = random_merge(CARRY_IMAGE_PATH, SECRET_IMAGE_PATH, seed)
             image = random_retrieve(image, seed)
             assert(s_image == image)
