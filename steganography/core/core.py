@@ -8,11 +8,16 @@ def parse_args():
     parser = argparse.ArgumentParser()
     parser.add_argument("carry", help="path to carry image")
     parser.add_argument("secret", help="path to secret file to hide")
+    parser.add_argument("-d", "--decrypt", help="retrieve hidden data from image", action='store_true')
     parser.add_argument("-o", "--output", help="path to store program output")
     args = parser.parse_args()
     steg = Steganography(get_seed(pass_code="hello hello hello", salt=bytes(4)))
-    steg.set_output_path(args.output)
-    steg.hide_data(args.carry, args.secret, random_merge)
+    if not args.decrypt:
+        steg.set_output_path(args.output)
+        steg.hide_data(args.carry, args.secret, random_merge)
+    else:
+        steg.set_output_path(args.secret)
+        steg.get_data(args.carry, random_retrieve)
 
 
 class Steganography:
