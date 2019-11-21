@@ -25,7 +25,7 @@ def bin_file_merge(image, f_bin, seed):
         byte_str = '{0:08b}'.format(byte)
         for bit in byte_str:
             i_arr[seq[counter]] = set_bit(i_arr[seq[counter]], 0, bit)
-            counter += 1
+            counter = counter + 1
 
     # store f_bin in image
     for byte in f_bin:
@@ -45,8 +45,6 @@ def bin_file_retrieve(image, seed):
     upper_bound = len(i_arr)
     seq = get_random_sequence(0, upper_bound, seed)
 
-    file = []
-
     # TODO refactor size retrieval into testable function
     # retrieve first 32 bytes that contain the size information
     size_bit_str = ''
@@ -55,4 +53,12 @@ def bin_file_retrieve(image, seed):
         size_bit_str += '{0:01b}'.format(bit & 1)
 
     file_size = int(size_bit_str, 2)
-    print(file_size)
+    assert(file_size * 8 < upper_bound)  # check the the number of bits in file does not exceed bytes in image
+
+    file_bit_str = ''
+    for i in seq[32: file_size * 8]:
+        bit = i_arr[i] % 2
+        file_bit_str += '{0:01b}'.format(bit & 1)
+
+    file = int(file_bit_str, 2).to_bytes(length=file_size-4, byteorder='big', signed=False)
+    return file
