@@ -37,3 +37,22 @@ def bin_file_merge(image, f_bin, seed):
     i_arr = i_arr.reshape(i_shape)
     # TODO: decide on whether or not to return an array or an image
     return i_arr
+
+
+def bin_file_retrieve(image, seed):
+    i_arr = np.array(image).ravel()  # get flat array from image
+
+    upper_bound = len(i_arr)
+    seq = get_random_sequence(0, upper_bound, seed)
+
+    file = []
+
+    # TODO refactor size retrieval into testable function
+    # retrieve first 32 bytes that contain the size information
+    size_bit_str = ''
+    for i in seq[:32]:
+        bit = i_arr[i] % 2  # extract LSB from each byte
+        size_bit_str += '{0:01b}'.format(bit & 1)
+
+    file_size = int(size_bit_str, 2)
+    print(file_size)
