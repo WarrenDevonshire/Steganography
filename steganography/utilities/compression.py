@@ -1,7 +1,7 @@
 import zlib
 
 
-def compress_file(data):
+def compress_data(data):
     compressed_data = zlib.compress(data, zlib.Z_BEST_COMPRESSION)
 
     compress_ratio = (float(len(data)) - float(len(compressed_data))) / float(len(data))
@@ -10,6 +10,6 @@ def compress_file(data):
     return compressed_data
 
 
-def decompress_file(data):
+def decompress_data(data):
     decompressed_data = zlib.decompress(data)
     return decompressed_data

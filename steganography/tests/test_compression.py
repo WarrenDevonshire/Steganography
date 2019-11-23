@@ -1,5 +1,5 @@
 import unittest
-from steganography.utilities.compression import compress_file, decompress_file
+from steganography.utilities.compression import compress_data, decompress_data
 CARRY_IMAGE_PATH = "../resources/hello.png"
 SECRET_IMAGE_PATH = "../resources/basi0g01.png"
 
@@ -9,15 +9,15 @@ class TestCompression(unittest.TestCase):
     def test_compress_file(self):
         with open(SECRET_IMAGE_PATH, 'rb') as file:
             data = file.read()
-            compressed_data = compress_file(data)
+            compressed_data = compress_data(data)
             print(len(data), data)
             print(len(compressed_data), compressed_data)
 
     def test_decompress_file(self):
         with open(SECRET_IMAGE_PATH, 'rb') as file:
             data = file.read()
-            compressed_data = compress_file(data)
-            decompressed_data = decompress_file(compressed_data)
+            compressed_data = compress_data(data)
+            decompressed_data = decompress_data(compressed_data)
 
             print(len(data), data)
             print(len(compressed_data), compressed_data)
@@ -27,10 +27,10 @@ class TestCompression(unittest.TestCase):
     def test_decompress_file_with_added_data(self):
         with open(SECRET_IMAGE_PATH, 'rb') as file:
             data = file.read()
-            compressed_data = compress_file(data)
+            compressed_data = compress_data(data)
             compressed_data += data
 
-            decompressed_data = decompress_file(compressed_data)
+            decompressed_data = decompress_data(compressed_data)
 
             print(len(data), data)
             print(len(compressed_data), compressed_data)
