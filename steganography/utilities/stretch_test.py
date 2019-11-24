@@ -163,10 +163,9 @@ def construct_new_carry(carry, message):
     carr_arr[:,:,2] = carr_b
     
     img = Image.fromarray(carr_arr, 'RGB')
-    return img, mesg_size, len(mesg_arr)
+    return img
 
-def pull_out_secret(carry, message):
-    carr_img = Image.open(carry)
+def pull_out_secret(merged, message):
     mesg_img = Image.open(message)
 
     width = mesg_img.size[0]
@@ -176,15 +175,19 @@ def pull_out_secret(carry, message):
     new_img = mesg_img
     new_img.show()
 
-    carr_arr = np.array(carr_img)
+    mer_arr = np.array(merged)
     mesg_arr = np.array(mesg_img)
     new_arr = np.array(new_img)
 
-    carr_r, carr_g, carr_b = carr_arr[:,:,0].ravel(), carr_arr[:,:,1].ravel(), carr_arr[:,:,2].ravel()
+    mer_r, mer_g, mer_b = mer_arr[:,:,0].ravel(), mer_arr[:,:,1].ravel(), mer_arr[:,:,2].ravel()
     mesg_r, mesg_g, mesg_b = mesg_arr[:,:,0].ravel(), mesg_arr[:,:,1].ravel(), mesg_arr[:,:,2].ravel()
     new_r, new_g, new_b = new_arr[:,:,0].ravel(), new_arr[:,:,1].ravel(), new_arr[:,:,2].ravel()
 
     print("Before")
+    print(mer_r)
+    print(mer_g)
+    print(mer_b)
+    print()
     print(mesg_r)
     print(mesg_g)
     print(mesg_b)
@@ -204,10 +207,10 @@ def pull_out_secret(carry, message):
     count = 0
 
     for i in range(0,len(new_r)):
-        carr_r_byte = carr_r[sequence[i]]
+        mer_r_byte = mer_r[sequence[i]]
         #print(carr_r_byte)
-        carr_g_byte = carr_g[sequence[i]]
-        carr_b_byte = carr_b[sequence[i]]
+        mer_g_byte = mer_g[sequence[i]]
+        mer_b_byte = mer_b[sequence[i]]
 
         # mesg_r_byte = deconstruct_r_byte(carr_r_byte)
         # mesg_g_byte = deconstruct_g_byte(carr_g_byte)
@@ -217,14 +220,18 @@ def pull_out_secret(carry, message):
         # new_g[i] = mesg_g_byte
         # new_b[i] = mesg_b_byte
 
-        new_r[i] = carr_r_byte
+        new_r[i] = mer_r_byte
         #print(new_r[i])
-        new_g[i] = carr_g_byte
-        new_b[i] = carr_b_byte
+        new_g[i] = mer_g_byte
+        new_b[i] = mer_b_byte
 
         count = count + 1
 
     print("After")
+    print(mer_r)
+    print(mer_g)
+    print(mer_b)
+    print()
     print(mesg_r)
     print(mesg_g)
     print(mesg_b)
@@ -253,9 +260,9 @@ def pull_out_secret(carry, message):
 
 def main():
     img = construct_new_carry(CARRY_IMAGE_FILE, MESG_IMAGE_FILE)
-    img[0].show()
+    img.show()
 
-    test = pull_out_secret(CARRY_IMAGE_FILE, MESG_IMAGE_FILE)
+    test = pull_out_secret(img, MESG_IMAGE_FILE)
     test.show()
 
     # print(deconstruct_g_byte(187))
