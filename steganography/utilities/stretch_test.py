@@ -1,6 +1,7 @@
 from PIL import Image
 import numpy as np
 from numpy import random
+import random
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 from cryptography.hazmat.backends import default_backend
@@ -129,7 +130,7 @@ def construct_new_carry(carry, message):
 
     count=0
 
-    for i in range(0,len(sequence)):
+    for i in range(0,len(mesg_r)):
         mesg_r_byte = mesg_r[i]
         mesg_g_byte = mesg_g[i]
         mesg_b_byte = mesg_b[i]
@@ -196,15 +197,15 @@ def pull_out_secret(carry, message):
     print(sequence[0:10])
     # seed = get_seed(pass_code="Hello there man", salt=bytes(4))
     # seed = seed % (2 ** 32 - 1)
-    # print(seed)
+    # # print(seed)
     # sequence = get_random_sequence(0, len(new_r), seed)
     # print(sequence)
 
     count = 0
 
-    for i in range(0,len(sequence)):
+    for i in range(0,len(new_r)):
         carr_r_byte = carr_r[sequence[i]]
-        print(carr_r_byte)
+        #print(carr_r_byte)
         carr_g_byte = carr_g[sequence[i]]
         carr_b_byte = carr_b[sequence[i]]
 
@@ -217,7 +218,7 @@ def pull_out_secret(carry, message):
         # new_b[i] = mesg_b_byte
 
         new_r[i] = carr_r_byte
-        print(new_r[i])
+        #print(new_r[i])
         new_g[i] = carr_g_byte
         new_b[i] = carr_b_byte
 
