@@ -5,6 +5,25 @@ from steganography.utilities.aes import encrypt, decrypt, generate_key_and_seed
 from steganography.utilities.compression import compress_data, decompress_data
 
 
+def _pack_data(data, key):
+    # compress and encrypt data
+    data = compress_data(data)
+    data = encrypt(data, key)
+
+    # transform data into bit array
+    data = np.array(data, dtype='uint8')
+    return np.unpackbits(data)
+
+
+def _unpack_data(data, key):
+    # transform data into byte array
+    data = np.packbits(data)
+
+    # decrypt and decompress data
+    data = decrypt(data, key)
+    return decompress_data(data)
+
+
 class Steganographer:
 
     def __init__(self, image_file_path):
@@ -16,18 +35,29 @@ class Steganographer:
         with open(path, 'rb') as f:
             data = f.read()
 
-        # compress and encrypt data
+        # compress, encrypt, and transform data into a bit array
         key, seed = generate_key_and_seed(passcode)
-        data = self._prepare_data(data, key)
-
-        # transform data into bit array
-        data = np.array(data, dtype='uint8')
-        data = np.unpackbits(data)
+        data = _pack_data(data, key)
 
         # apply strategy
         image = Image.fromarray(strategy(np.copy(self._pixels), data, seed))
         image.save(fp=out_path)
 
-    def _prepare_data(self, data, key):
-        data = compress_data(data)
-        return encrypt(data, key)
+    @staticmethod
+    def get_data_from_image(image_path, out_path, strategy, passcode=''):
+        with Image.open(image_path) as image:
+            pixels = np.array(image)
+        # flatten pixels
+        pixels = pixels.ravel()
+
+        key, seed = generate_key_and_seed(passcode)
+
+        # apply strategy
+        data = strategy(pixels, seed)
+
+        # decompress, decrypt, and transform data into byte array
+        data = _unpack_data(data, key)
+
+        # save data to out_path
+        with open(out_path, 'w') as f:
+            f.write(data)
