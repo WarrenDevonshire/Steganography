@@ -11,14 +11,11 @@ def _pack_data(data, key):
     data = encrypt(data, key)
 
     # transform data into bit array
-    data = np.array(data, dtype='uint8')
+    data = np.frombuffer(data, dtype='uint8')
     return np.unpackbits(data)
 
 
 def _unpack_data(data, key):
-    # transform data into byte array
-    data = np.packbits(data)
-
     # decrypt and decompress data
     data = decrypt(data, key)
     return decompress_data(data)
@@ -40,7 +37,8 @@ class Steganographer:
         data = _pack_data(data, key)
 
         # apply strategy
-        image = Image.fromarray(strategy(np.copy(self._pixels), data, seed))
+        image = np.reshape(strategy(np.copy(self._pixels), data, seed), self._pixels.shape)
+        image = Image.fromarray(image)
         image.save(fp=out_path)
 
     @staticmethod

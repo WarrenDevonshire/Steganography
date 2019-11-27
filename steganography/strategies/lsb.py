@@ -10,8 +10,11 @@ def hide_data_in_LSB(carry, data, seed=0):
     data -- an array of bits to hide
     seed -- an integer (default = 0)
     """
+    carry = carry.ravel()
     upper_bound = (len(carry) // 8) * 8
     data_size = len(data)
+
+    print(upper_bound, data_size)
 
     assert(data_size < upper_bound)
 
