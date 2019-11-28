@@ -27,7 +27,6 @@ def hide_data_in_LSB(carry, data, seed=0):
         if bit:
             byte = byte | bit_mask
         carry[random_index] = byte
-
     return carry
 
 
@@ -41,4 +40,9 @@ def get_data_in_LSB(carry, seed=0):
     for index, random_index in enumerate(seq):
         bits[index] = carry[random_index] % 2
 
-    return np.packbits(bits)
+    data = np.packbits(bits)
+    print(len(data))
+    data_size = 3168 // 8
+    data = data[:396]
+    print(len(data))
+    return data

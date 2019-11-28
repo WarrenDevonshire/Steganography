@@ -1,5 +1,6 @@
 from PIL import Image
 import numpy as np
+import logging
 
 from steganography.utilities.aes import encrypt, decrypt, generate_key_and_seed
 from steganography.utilities.compression import compress_data, decompress_data
@@ -8,17 +9,23 @@ from steganography.utilities.compression import compress_data, decompress_data
 def _pack_data(data, key):
     # compress and encrypt data
     data = compress_data(data)
+    logging.info("compressed data size: %s", len(data))
     data = encrypt(data, key)
-
+    logging.info("encrypted data size: %s", len(data))
     # transform data into bit array
     data = np.frombuffer(data, dtype='uint8')
+    print("Pack Buffer:", data)
     return np.unpackbits(data)
 
 
 def _unpack_data(data, key):
     # decrypt and decompress data
+    data = data.tobytes()
     data = decrypt(data, key)
-    return decompress_data(data)
+    logging.info("decrypted data size: %s", len(data))
+    data = decompress_data(data)
+    logging.info("decompressed data size: %s", len(data))
+    return data
 
 
 class Steganographer:
@@ -57,5 +64,5 @@ class Steganographer:
         data = _unpack_data(data, key)
 
         # save data to out_path
-        with open(out_path, 'w') as f:
+        with open(out_path, 'wb') as f:
             f.write(data)
