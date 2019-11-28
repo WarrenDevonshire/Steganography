@@ -12,8 +12,7 @@ PASSCODE = "Hello, World!"
 class TestSteganographer(unittest.TestCase):
 
     def test_hide_data_from_file(self):
-        logging.basicConfig(filename='TestSteganographerHideData.log', level=logging.INFO)
-        logging.basicConfig(format='%(asctime)s %(message)s')
+        logging.basicConfig(filename='TestSteganographerHideData.log', level=logging.INFO, format='%(asctime)s %(message)s')
         st = Steganographer(IMAGE)
         st.hide_data_from_file(DATA, OUT_PATH, hide_data_in_LSB, PASSCODE)
 
@@ -24,8 +23,7 @@ class TestSteganographer(unittest.TestCase):
         assert(image != output)
 
     def test_get_data_from_image(self):
-        logging.basicConfig(filename='TestSteganographerGetData.log', level=logging.INFO)
-        logging.basicConfig(format='%(asctime)s %(message)s')
+        logging.basicConfig(filename='TestSteganographerGetData.log', level=logging.INFO, format='%(asctime)s %(message)s')
         Steganographer.get_data_from_image(OUT_PATH, OUT_DATA_PATH, get_data_in_LSB, PASSCODE)
 
 # Why don't I reverse the retrieval?

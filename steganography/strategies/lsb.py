@@ -1,5 +1,6 @@
 import numpy as np
 from steganography.utilities.rand import get_random_sequence
+import logging
 
 
 def hide_data_in_LSB(carry, data, seed=0):
@@ -14,11 +15,13 @@ def hide_data_in_LSB(carry, data, seed=0):
     upper_bound = (len(carry) // 8) * 8
     data_size = len(data)
 
-    print(upper_bound, data_size)
+    logging.info("upper_bound: %s", upper_bound)
+    logging.info("data_size: %s", data_size)
 
     assert(data_size < upper_bound)
 
     seq = get_random_sequence(0, upper_bound, seed)
+    logging.info("seq: %s", len(seq))
 
     for index, bit in enumerate(data):
         random_index = seq[index]
@@ -27,22 +30,24 @@ def hide_data_in_LSB(carry, data, seed=0):
         if bit:
             byte = byte | bit_mask
         carry[random_index] = byte
+    logging.info("carry: %s", len(carry))
     return carry
 
 
 def get_data_in_LSB(carry, seed=0):
     upper_bound = (len(carry) // 8) * 8
-
+    logging.info("upper_bound: %s", upper_bound)
     seq = get_random_sequence(0, upper_bound, seed)
+    logging.info("seq: %s", len(seq))
 
     bits = np.empty(upper_bound, dtype='uint8')
+    logging.info("bits: %s", len(bits))
 
     for index, random_index in enumerate(seq):
         bits[index] = carry[random_index] % 2
-
+    logging.info("bits to bytes: %s", len(bits) // 8)
     data = np.packbits(bits)
-    print(len(data))
-    data_size = 3168 // 8
+    logging.info("data packed: %s", len(data))
     data = data[:396]
-    print(len(data))
+    logging.info("data slice: %s", len(data))
     return data
