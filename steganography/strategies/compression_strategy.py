@@ -4,6 +4,7 @@ from steganography.utilities.compression import compress_data, decompress_data
 import numpy as np
 
 
+# TODO: REMOVE
 def hide_compressed_data(carry, data, seed=0):
     data = compress_data(data)
     data = np.frombuffer(data, dtype='uint8')

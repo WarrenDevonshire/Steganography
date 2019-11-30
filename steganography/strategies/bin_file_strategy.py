@@ -3,6 +3,7 @@ from steganography.utilities.bits import set_bit
 from steganography.utilities.rand import get_random_sequence
 
 
+# TODO: Remove. Deprecated, replaced by lsb.py
 def bin_file_merge(image, f_bin, seed):
     # convert image into a flat numpy array
     i_arr = np.array(image)

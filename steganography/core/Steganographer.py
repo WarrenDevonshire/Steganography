@@ -6,6 +6,7 @@ from steganography.utilities.aes import encrypt, decrypt, generate_key_and_seed
 from steganography.utilities.compression import compress_data, decompress_data
 
 
+# TODO: Make compression optional via cmd args
 def _pack_data(data, key):
     # compress and encrypt data
     data = compress_data(data)
@@ -18,6 +19,7 @@ def _pack_data(data, key):
     return np.unpackbits(data)
 
 
+# TODO: Make compression a try catch? or maybe optional via cmd.
 def _unpack_data(data, key):
     # decrypt and decompress data
     data = data.tobytes()
@@ -33,7 +35,7 @@ class Steganographer:
     def __init__(self, image_file_path):
         with Image.open(image_file_path) as image:
             self._pixels = np.array(image)
-        self._pixels.setflags(write=False)  # Should this be immutable?
+        self._pixels.setflags(write=False)  # TODO: should _pixels be immutable?
 
     def hide_data_from_file(self, path, out_path, strategy, passcode=''):
         with open(path, 'rb') as f:
@@ -41,7 +43,7 @@ class Steganographer:
 
         # compress, encrypt, and transform data into a bit array
         key, seed = generate_key_and_seed(passcode)
-        data = _pack_data(data, key)
+        data = _pack_data(data, key)  # TODO: Make compression optional via cmd args
 
         # apply strategy
         image = np.reshape(strategy(np.copy(self._pixels), data, seed), self._pixels.shape)
@@ -53,7 +55,7 @@ class Steganographer:
         with Image.open(image_path) as image:
             pixels = np.array(image)
         # flatten pixels
-        pixels = pixels.ravel()
+        pixels = pixels.ravel()  # TODO: strategies should handle pixel manipulation
 
         key, seed = generate_key_and_seed(passcode)
 

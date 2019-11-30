@@ -4,6 +4,8 @@ from steganography.utilities.hash import get_seed
 from steganography.strategies.bin_strategy import random_retrieve, random_merge
 
 
+# TODO: Add flags for strategy selection
+# TODO: Remove unnecessary png files from resources.
 def parse_args():
     parser = argparse.ArgumentParser()
     parser.add_argument("carry", help="path to carry image")

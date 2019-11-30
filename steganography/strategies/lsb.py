@@ -50,6 +50,7 @@ def hide_data_in_LSB(carry, data, seed=0):
     return carry
 
 
+# TODO: In Progress. Status: Broken
 def get_data_in_LSB(carry, seed=0):
     upper_bound = (len(carry) // 8) * 8
     logging.info("upper_bound: %s", upper_bound)
