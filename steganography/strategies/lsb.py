@@ -18,6 +18,9 @@ def hide_data_in_LSB(carry, data, seed):
     data_size = len(data)
 
     logging.info("HIDE_DATA: Data size: %s", data_size // 8)
+    logging.info("HIDE_DATA: Carry limit is: %s bytes", len(carry) // 8)
+    logging.info("HIDE_DATA: Carry limit is: %s kilobytes", (len(carry) // 8) / 1_000)
+    logging.info("HIDE_DATA: Carry limit is: %s megabytes", (len(carry) // 8) / 1_000_000)
 
     assert(data_size < upper_bound)
 
