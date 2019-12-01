@@ -11,12 +11,12 @@ PASSCODE = "Hello, World!"
 
 class TestCore(unittest.TestCase):
 
-    def test_hide_data(self):
+    def test_hide_data_with_lsb(self):
         st = Steganography()
         st.set_output_path(path_to_output=OUT_PATH)
         st.hide_data(path_to_carry=IMAGE, path_to_secret=DATA, strategy=hide_data_in_LSB)
 
-    def test_get_data(self):
+    def test_get_data_with_lsb(self):
         st = Steganography()
         st.set_output_path(path_to_output=OUT_DATA_PATH)
         st.get_data(path_to_carry=OUT_PATH, strategy=get_data_in_LSB)

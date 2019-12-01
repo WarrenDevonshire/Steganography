@@ -1,6 +1,4 @@
 import argparse
-from PIL import Image
-from steganography.utilities.hash import get_seed
 from steganography.strategies.lsb import get_data_in_LSB, hide_data_in_LSB
 from steganography.core.Steganographer import Steganographer
 

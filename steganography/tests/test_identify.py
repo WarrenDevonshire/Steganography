@@ -3,12 +3,13 @@ import unittest
 from steganography.utilities.identify import type_of_file, type_of_bin
 
 PNG_HEADER_SIG = binascii.hexlify(b"\x89\x50\x4e\x47\x0d\x0a\x1a\x0a")
+IMAGE = "../resources/hello.png"
 
 
 class TestIdentify(unittest.TestCase):
 
     def test_type_of_file(self):
-        b = type_of_file("../resources/hidden.png")
+        b = type_of_file(IMAGE)
         assert(b is True)
 
     def test_type_of_bin(self):
