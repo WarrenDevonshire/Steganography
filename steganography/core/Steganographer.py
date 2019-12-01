@@ -10,12 +10,11 @@ from steganography.utilities.compression import compress_data, decompress_data
 def _pack_data(data, key):
     # compress and encrypt data
     data = compress_data(data)
-    logging.info("compressed data size: %s", len(data))
+    logging.info("PACK_DATA: compressed data size: %s", len(data))
     data = encrypt(data, key)
-    logging.info("encrypted data size: %s", len(data))
+    logging.info("PACK_DATA: encrypted data size: %s", len(data))
     # transform data into bit array
     data = np.frombuffer(data, dtype='uint8')
-    print("Pack Buffer:", data)
     return np.unpackbits(data)
 
 
@@ -24,9 +23,9 @@ def _unpack_data(data, key):
     # decrypt and decompress data
     data = data.tobytes()
     data = decrypt(data, key)
-    logging.info("decrypted data size: %s", len(data))
+    logging.info("UNPACK_DATA: decrypted data size: %s", len(data))
     data = decompress_data(data)
-    logging.info("decompressed data size: %s", len(data))
+    logging.info("UNPACK_DATA: decompressed data size: %s", len(data))
     return data
 
 
