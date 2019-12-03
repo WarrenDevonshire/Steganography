@@ -5,6 +5,7 @@ from steganography.utilities.bits import integer_to_binary, binary_to_integer
 import random
 
 
+# TODO: Remove?
 def merge_images(carry_image_path, mesg_image_path, secret_key):
     """
     Merge two images. The msegImage will be merged into the carryImage.

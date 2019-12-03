@@ -1,6 +1,5 @@
 def set_bit(byte, index, bit):
     # TODO: Write function documentation
-    bit = int(bit, 2)
     bit_mask = 1 << index
     byte = byte & ~bit_mask
     if bit:
