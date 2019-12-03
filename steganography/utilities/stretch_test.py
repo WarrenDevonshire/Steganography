@@ -119,6 +119,12 @@ def construct_new_carry(carry, message):
     carr_r, carr_g, carr_b = carr_arr[:,:,0].ravel(), carr_arr[:,:,1].ravel(), carr_arr[:,:,2].ravel()
     mesg_r, mesg_g, mesg_b = mesg_arr[:,:,0].ravel(), mesg_arr[:,:,1].ravel(), mesg_arr[:,:,2].ravel()
 
+    print("Original")
+    print(carr_r)
+    print(carr_g)
+    print(carr_b)
+    print()
+
     sequence = get_random_sequence(0, len(mesg_r), 10)
     print(sequence[0:10])
 
@@ -135,19 +141,29 @@ def construct_new_carry(carry, message):
         mesg_g_byte = mesg_g[i]
         mesg_b_byte = mesg_b[i]
 
-        carr_r_byte = carr_r[sequence[i]]
-        carr_g_byte = carr_g[sequence[i]]
-        carr_b_byte = carr_b[sequence[i]]
+        # carr_r_byte = carr_r[sequence[i]]
+        # carr_g_byte = carr_g[sequence[i]]
+        # carr_b_byte = carr_b[sequence[i]]
+
+        carr_r_byte = carr_r[i]
+        carr_g_byte = carr_g[i]
+        carr_b_byte = carr_b[i]
 
         new_carr_r_byte = construct_r_byte(carr_r_byte, mesg_r_byte)
         new_carr_g_byte = construct_g_byte(carr_g_byte, mesg_g_byte)
         new_carr_b_byte = construct_b_byte(carr_b_byte, mesg_b_byte)
 
-        carr_r[sequence[i]] = new_carr_r_byte
-        carr_g[sequence[i]] = new_carr_g_byte
-        carr_b[sequence[i]] = new_carr_b_byte
+        carr_r[i] = new_carr_r_byte
+        carr_g[i] = new_carr_g_byte
+        carr_b[i] = new_carr_b_byte
 
         count = count + 1
+
+    print("Merged")
+    print(carr_r)
+    print(carr_g)
+    print(carr_b)
+    print()
 
     carr_r = np.matrix(carr_r)
     carr_r = np.asarray(carr_r).reshape(carr_length, carr_width)
