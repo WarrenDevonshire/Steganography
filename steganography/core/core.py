@@ -11,8 +11,11 @@ def parse_args():
     parser.add_argument("secret", help="path to secret file to hide")
     parser.add_argument("-d", "--decrypt", help="retrieve hidden data from image", action='store_true')
     parser.add_argument("-o", "--output", help="path to store program output")
+    parser.add_argument("-p", "--passcode", help="passcode to encrypt data")
     args = parser.parse_args()
     st = Steganography()
+    if args.passcode:
+        st.set_passcode(args.passcode)
     if not args.decrypt:
         st.set_output_path(args.output)
         st.hide_data(args.carry, args.secret, hide_data_in_LSB)
@@ -25,15 +28,19 @@ class Steganography:
 
     def __init__(self):
         self.path_to_output = "./output.png"
+        self.passcode = ''
 
     def set_output_path(self, path_to_output):
         self.path_to_output = path_to_output
 
+    def set_passcode(self, passcode):
+        self.passcode = passcode
+
     def hide_data(self, path_to_carry, path_to_secret, strategy):
         st = Steganographer(path_to_carry)
-        passcode = ''  # TODO: get passcode from stdin
-        st.hide_data_from_file(path=path_to_secret, out_path=self.path_to_output, strategy=strategy, passcode=passcode)
+        # passcode = ''  # TODO: get passcode from stdin
+        st.hide_data_from_file(path=path_to_secret, out_path=self.path_to_output, strategy=strategy, passcode=self.passcode)
 
     def get_data(self, path_to_carry, strategy):
-        passcode = ''  # TODO: get passcode from stdin
-        Steganographer.get_data_from_image(image_path=path_to_carry, out_path=self.path_to_output, strategy=get_data_in_LSB, passcode=passcode)
+        # passcode = ''  # TODO: get passcode from stdin
+        Steganographer.get_data_from_image(image_path=path_to_carry, out_path=self.path_to_output, strategy=strategy, passcode=self.passcode)
