@@ -7,7 +7,8 @@ import base64
 
 def encrypt(data, key):
     f = Fernet(key)
-    return f.encrypt(data)
+    data = f.encrypt(data)
+    return data
 
 
 def decrypt(token, key):
