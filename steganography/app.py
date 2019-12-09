@@ -71,7 +71,11 @@ def run():
     setup_logger(LOG_LEVELS[args.log_level])
 
     log = logging.getLogger('steganography')
-
-    st = Steganographer(args.image)
+    log.debug(f'args: {args}')
+    st = Steganographer(args.image, args.encrypt, args.compression)
+    try:
+        st.hide_data_from_file(args.data, args.output, hide_data_in_LSB, '')
+    except Exception:
+        log.error('Fatal error while hiding data', exc_info=True)
 
 

@@ -11,10 +11,11 @@ class Steganographer:
     def __init__(self, image_file_path, encryption, compression):
         with Image.open(image_file_path) as image:
             self._pixels = np.array(image)
-        self._pixels.setflags(write=False)  # TODO: should _pixels be immutable?
+        self._pixels.setflags(write=False)
         self.compression = compression
         self.encryption = encryption
         self.log = logging.getLogger(__name__)
+        self.log.debug('Steganographer created!')
 
     def hide_data_from_file(self, path, out_path, strategy, passcode):
         self.log.debug('hide_data_from_file() has begun!')
@@ -43,8 +44,6 @@ class Steganographer:
         self.log.debug('get_data_from_image() has begun!')
         with Image.open(image_path) as image:
             pixels = np.array(image)
-        # flatten pixels
-        pixels = pixels.ravel()  # TODO: strategies should handle pixel manipulation
 
         # apply strategy
         key, seed = generate_key_and_seed(passcode)
