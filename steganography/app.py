@@ -71,3 +71,7 @@ def run():
     setup_logger(LOG_LEVELS[args.log_level])
 
     log = logging.getLogger('steganography')
+
+    st = Steganographer(args.image)
+
+

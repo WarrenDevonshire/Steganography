@@ -31,10 +31,12 @@ def _unpack_data(data, key):
 
 class Steganographer:
 
-    def __init__(self, image_file_path):
+    def __init__(self, image_file_path, encryption, compression):
         with Image.open(image_file_path) as image:
             self._pixels = np.array(image)
         self._pixels.setflags(write=False)  # TODO: should _pixels be immutable?
+        self.compression = compression
+        self.encryption = encryption
 
     def hide_data_from_file(self, path, out_path, strategy, passcode=''):
         with open(path, 'rb') as f:
@@ -49,6 +51,7 @@ class Steganographer:
         image = Image.fromarray(image)
         image.save(fp=out_path)
 
+    # TODO: make non static so flags can be set from init
     @staticmethod
     def get_data_from_image(image_path, out_path, strategy, passcode=''):
         with Image.open(image_path) as image:
