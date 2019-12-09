@@ -2,7 +2,6 @@ import numpy as np
 from steganography.utilities.rand import get_random_sequence
 import logging
 
-log = logging.getLogger(__name__)
 SIZE_LENGTH = 32
 
 
@@ -14,6 +13,7 @@ def hide_data_in_LSB(carry, data, seed):
     :param seed: an integer
     :return: flattened carry is returned
     """
+    log = logging.getLogger(__name__)
     log.debug('hide_data_in_LSB() has been called!')
     carry = carry.ravel()
     upper_bound = (len(carry) // 8) * 8
@@ -65,6 +65,7 @@ def get_data_in_LSB(carry, seed):
     :param seed: an integer
     :return: an np array of bytes
     """
+    log = logging.getLogger(__name__)
     log.debug('get_data_in_LSB() has been called!')
     seq = get_random_sequence(0, ((len(carry) // 8) * 8), seed)
     log.debug(f'seq length: {len(seq)}')
