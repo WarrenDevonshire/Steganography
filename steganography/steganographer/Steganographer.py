@@ -12,22 +12,22 @@ class Steganographer:
         with Image.open(image_file_path) as image:
             self._pixels = np.array(image)
         self._pixels.setflags(write=False)
-        self.compression = compression
-        self.encryption = encryption
-        self.log = logging.getLogger(__name__)
-        self.log.debug('Steganographer created!')
+        self._compression = compression
+        self._encryption = encryption
+        self._log = logging.getLogger(__name__)
+        self._log.debug('Steganographer created!')
 
     def hide_data_from_file(self, path, out_path, strategy, passcode):
-        self.log.debug('hide_data_from_file() has begun!')
+        self._log.debug('hide_data_from_file() has begun!')
         with open(path, 'rb') as f:
             data = f.read()
 
         # compress and encrypt data
-        if self.compression:
+        if self._compression:
             data = compress_data(data)
 
         key, seed = generate_key_and_seed(passcode)
-        if self.encryption:
+        if self._encryption:
             data = encrypt(data, key)
 
         # transform data into bit array
@@ -38,25 +38,23 @@ class Steganographer:
         image = np.reshape(strategy(np.copy(self._pixels), data, seed), self._pixels.shape)
         image = Image.fromarray(image)
         image.save(out_path)
-        self.log.debug('hide_data_from_file() has finished!')
+        self._log.debug('hide_data_from_file() has finished!')
 
-    def get_data_from_image(self, image_path, out_path, strategy, passcode):
-        self.log.debug('get_data_from_image() has begun!')
-        with Image.open(image_path) as image:
-            pixels = np.array(image)
+    def get_data_from_image(self, out_path, strategy, passcode):
+        self._log.debug('get_data_from_image() has begun!')
 
         # apply strategy
         key, seed = generate_key_and_seed(passcode)
-        data = strategy(pixels, seed)
+        data = strategy(self._pixels, seed)
 
         # compress and encrypt data
-        if self.encryption:
+        if self._encryption:
             data = decompress_data(data, key)
 
-        if self.compression:
+        if self._compression:
             data = decompress_data(data)
 
         # save data to out_path
         with open(out_path, 'wb') as f:
             f.write(data)
-        self.log.debug('get_data_from_image() has finished!')
+        self._log.debug('get_data_from_image() has finished!')

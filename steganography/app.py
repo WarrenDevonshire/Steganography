@@ -72,10 +72,17 @@ def run():
 
     log = logging.getLogger('steganography')
     log.debug(f'args: {args}')
-    st = Steganographer(args.image, args.encrypt, args.compression)
-    try:
-        st.hide_data_from_file(args.data, args.output, hide_data_in_LSB, '')
-    except Exception:
-        log.error('Fatal error while hiding data', exc_info=True)
 
+    if args.subcommand == 'hide':
+        try:
+            st = Steganographer(args.image, args.encrypt, args.compression)
+            st.hide_data_from_file(args.data, args.output, hide_data_in_LSB, '')
+        except Exception:
+            log.error('Fatal error while hiding data', exc_info=True)
 
+    if args.subcommand == 'get':
+        try:
+            st = Steganographer(args.image, args.decrypt, args.compression)
+            st.get_data_from_image(args.output, get_data_in_LSB, '')
+        except Exception:
+            log.error('Fatal error while getting data', exc_info=True)
