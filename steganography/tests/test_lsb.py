@@ -2,12 +2,11 @@ import unittest
 from PIL import Image
 import numpy as np
 import logging
+from steganography.tests.COMMON import IMAGES, DATA
 
 from steganography.strategies.lsb import hide_data_in_LSB, get_data_in_LSB
 from steganography.utilities.aes import generate_key_and_seed, encrypt, decrypt
 
-IMAGE = "../resources/hello.png"
-FILE = "../resources/basi0g01.png"
 PASSCODE = "Hello, World!"
 
 
@@ -32,7 +31,7 @@ class TestLsb(unittest.TestCase):
         log.addHandler(ch)
 
         log.debug('test_lsb() has started!')
-        with Image.open(IMAGE) as image, open(FILE, 'rb') as file:
+        with Image.open(IMAGES['1mb']) as image, open(DATA['150kb'], 'rb') as file:
             image = np.array(image).ravel()
             data = file.read()
 
