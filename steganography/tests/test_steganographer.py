@@ -1,5 +1,5 @@
 import unittest
-from steganography.core.Steganographer import Steganographer
+from steganography.steganographer.Steganographer import Steganographer
 from steganography.strategies.lsb import hide_data_in_LSB, get_data_in_LSB
 import logging
 IMAGE = "../resources/hello.png"
