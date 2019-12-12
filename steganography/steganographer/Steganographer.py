@@ -45,11 +45,11 @@ class Steganographer:
 
         # apply strategy
         key, seed = generate_key_and_seed(passcode)
-        data = strategy(self._pixels, seed)
+        data = strategy(self._pixels, seed).tobytes()
 
         # compress and encrypt data
         if self._encryption:
-            data = decompress_data(data, key)
+            data = decrypt(data, key)
 
         if self._compression:
             data = decompress_data(data)

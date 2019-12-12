@@ -74,15 +74,26 @@ def run():
     log.debug(f'args: {args}')
 
     if args.subcommand == 'hide':
+        passcode = ''
+        if args.encrypt:
+            passcode = get_passcode_from_stdin()
         try:
             st = Steganographer(args.image, args.encrypt, args.compression)
-            st.hide_data_from_file(args.data, args.output, hide_data_in_LSB, '')
+            st.hide_data_from_file(args.data, args.output, hide_data_in_LSB, passcode)
         except Exception:
             log.error('Fatal error while hiding data', exc_info=True)
 
     if args.subcommand == 'get':
+        passcode = ''
+        if args.decrypt:
+            passcode = get_passcode_from_stdin()
         try:
             st = Steganographer(args.image, args.decrypt, args.compression)
-            st.get_data_from_image(args.output, get_data_in_LSB, '')
+            st.get_data_from_image(args.output, get_data_in_LSB, passcode)
         except Exception:
             log.error('Fatal error while getting data', exc_info=True)
+
+
+def get_passcode_from_stdin():
+    s = input('passcode: ')
+    return s
